@@ -116,7 +116,7 @@ public class DriveSubsystem extends SubsystemBase {
    *                      field.
    * @param rateLimit     Whether to enable rate limiting for smoother control.
    */
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit) {
+  public void drive(double xSpeed, double ySpeed, double rot, double power, boolean fieldRelative, boolean rateLimit) {
     
     double xSpeedCommanded;
     double ySpeedCommanded;
@@ -124,7 +124,7 @@ public class DriveSubsystem extends SubsystemBase {
     if (rateLimit) {
       // Convert XY to polar for rate limiting
       double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
-      double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+      double inputTranslationMag = power;
 
       // Calculate the direction slew rate based on an estimate of the lateral acceleration
       double directionSlewRate;
@@ -164,8 +164,10 @@ public class DriveSubsystem extends SubsystemBase {
 
 
     } else {
-      xSpeedCommanded = xSpeed;
-      ySpeedCommanded = ySpeed;
+      //Pythagorean theorem to solve for x
+      xSpeedCommanded = Math.sqrt(Math.pow(power, 2) - Math.pow(ySpeed, 2));
+      //Pythagorean theorem to soolve for y
+      ySpeedCommanded = Math.sqrt(Math.pow(power, 2) - Math.pow(xSpeed, 2));
       m_currentRotation = rot;
     }
 
