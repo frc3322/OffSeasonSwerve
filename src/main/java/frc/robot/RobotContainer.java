@@ -15,6 +15,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -54,8 +55,12 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true, true),
+                false, true),
             m_robotDrive));
+
+            SmartDashboard.putNumber("LY", -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband));
+            SmartDashboard.putNumber("LX", -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband));
+            SmartDashboard.putNumber("RX", -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband));
   }
 
   /**

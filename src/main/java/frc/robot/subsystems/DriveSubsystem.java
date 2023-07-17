@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -14,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.ADIS16470_IMU;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,7 +43,7 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightChassisAngularOffset);
 
   // The gyro sensor
-  private final ADIS16470_IMU m_gyro = new ADIS16470_IMU();
+  private final AHRS m_gyro = new AHRS();
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -65,6 +67,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
+    
   }
 
   @Override
@@ -78,6 +81,26 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
+
+        SmartDashboard.putNumber("angle", m_gyro.getAngle());
+        SmartDashboard.putNumber("angle", m_gyro.getAngle());
+        SmartDashboard.putNumber("FLpos", m_frontLeft.getPosition().distanceMeters);
+        SmartDashboard.putNumber("FRpos", m_frontRight.getPosition().distanceMeters);
+        SmartDashboard.putNumber("BLpos", m_rearLeft.getPosition().distanceMeters);
+        SmartDashboard.putNumber("BRpos", m_rearRight.getPosition().distanceMeters);
+
+        SmartDashboard.putString("chassisaspeeds", 
+        ChassisSpeeds.fromFieldRelativeSpeeds(1, 0, 0, Rotation2d.fromDegrees(m_gyro.getAngle()))
+        .toString());
+
+        SmartDashboard.putString("FL actual State", m_frontLeft.getState().toString());
+        SmartDashboard.putString("FR actual State", m_frontRight.getState().toString());
+        SmartDashboard.putString("BL actual State", m_rearLeft.getState().toString());
+        SmartDashboard.putString("BR actual State", m_rearRight.getState().toString());
+       
+
+
+    SmartDashboard.updateValues();
   }
 
   /**
@@ -143,7 +166,7 @@ public class DriveSubsystem extends SubsystemBase {
         m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
       }
       else if (angleDif > 0.85*Math.PI) {
-        if (m_currentTranslationMag > 1e-4) { //some small number to avoid floating-point errors with equality checking
+        if (m_currentTranslationMag > 1e-3) { //some small number to avoid floating-point errors with equality checking
           // keep currentTranslationDir unchanged
           m_currentTranslationMag = m_magLimiter.calculate(0.0);
         }
@@ -180,6 +203,20 @@ public class DriveSubsystem extends SubsystemBase {
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+      
+    SmartDashboard.putString("actualCS", ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle())).toString());
+    SmartDashboard.putNumber("x delivered", xSpeedDelivered);
+    SmartDashboard.putNumber("y delivered", ySpeedDelivered);
+    SmartDashboard.putNumber("rot delivered", rotDelivered);
+    SmartDashboard.putString("fl state", swerveModuleStates[0].toString());
+    SmartDashboard.putString("fr state", swerveModuleStates[1].toString());
+    SmartDashboard.putString("bl state", swerveModuleStates[2].toString());
+    SmartDashboard.putString("br state", swerveModuleStates[3].toString());
+    SmartDashboard.putString("fl opt state", m_frontLeft.getCurrentDesiredState().toString());
+    SmartDashboard.putString("fr opt state", m_frontLeft.getCurrentDesiredState().toString());
+    SmartDashboard.putString("bl opt state", m_frontLeft.getCurrentDesiredState().toString());
+    SmartDashboard.putString("br opt state", m_frontLeft.getCurrentDesiredState().toString());
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
