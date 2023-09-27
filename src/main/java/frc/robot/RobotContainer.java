@@ -105,7 +105,7 @@ public class RobotContainer {
             new Translation2d(2.03, 2.24)
         ),
         // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(5.38, -.23, new Rotation2d(0)),
+        new Pose2d(5.38, -.1, new Rotation2d(0)),
         config);
 
     var thetaController = new ProfiledPIDController(
