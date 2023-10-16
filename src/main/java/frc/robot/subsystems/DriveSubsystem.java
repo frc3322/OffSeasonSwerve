@@ -53,6 +53,9 @@ public class DriveSubsystem extends SubsystemBase {
   
   private double lastDir = 0;
 
+  public double tempDirectionSlewRate = 1.2;
+  
+
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
   private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
@@ -70,7 +73,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    
+    SmartDashboard.putNumber("tempdirslew", tempDirectionSlewRate);
   }
 
   @Override
@@ -91,6 +94,8 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("FRpos", m_frontRight.getPosition().distanceMeters);
         SmartDashboard.putNumber("BLpos", m_rearLeft.getPosition().distanceMeters);
         SmartDashboard.putNumber("BRpos", m_rearRight.getPosition().distanceMeters);
+        
+        tempDirectionSlewRate = SmartDashboard.getNumber("tempdirslew", 1.2);
 
         SmartDashboard.putString("chassisaspeeds", 
         ChassisSpeeds.fromFieldRelativeSpeeds(1, 0, 0, Rotation2d.fromDegrees(m_gyro.getAngle()))
