@@ -20,6 +20,7 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
+import io.github.oblarg.oblog.Logger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -78,6 +79,10 @@ public class RobotContainer {
             () -> m_robotDrive.setX(),
             m_robotDrive));
   }
+  public void updateLogger() {
+    Logger.updateEntries();
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

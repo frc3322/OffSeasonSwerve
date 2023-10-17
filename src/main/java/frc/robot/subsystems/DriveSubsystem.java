@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.ADIS16470_IMU;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
+import io.github.oblarg.oblog.annotations.Config;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -73,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem() {
-    SmartDashboard.putNumber("tempdirslew", tempDirectionSlewRate);
+   
   }
 
   @Override
@@ -95,7 +96,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("BLpos", m_rearLeft.getPosition().distanceMeters);
         SmartDashboard.putNumber("BRpos", m_rearRight.getPosition().distanceMeters);
         
-        tempDirectionSlewRate = SmartDashboard.getNumber("tempdirslew", 1.2);
+      
 
         SmartDashboard.putString("chassisaspeeds", 
         ChassisSpeeds.fromFieldRelativeSpeeds(1, 0, 0, Rotation2d.fromDegrees(m_gyro.getAngle()))
@@ -111,6 +112,10 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.updateValues();
   }
 
+  @Config
+  public void changeDirectionSlewRate(double newRateVal){
+    tempDirectionSlewRate = newRateVal;
+  }
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -162,9 +167,10 @@ public class DriveSubsystem extends SubsystemBase {
         inputTranslationDir = lastDir;
       }
       // Calculate the direction slew rate based on an estimate of the lateral acceleration
+      //ISTG MAKE SURE TO CHANGE THIS BACK TO ACTUAL RATE FROM CONSTANTS
       double directionSlewRate;
       if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
+        directionSlewRate = Math.abs(tempDirectionSlewRate / m_currentTranslationMag);
       } else {
         directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
       }
