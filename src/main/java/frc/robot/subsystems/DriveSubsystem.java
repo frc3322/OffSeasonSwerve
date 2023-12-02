@@ -170,7 +170,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable{
       //ISTG MAKE SURE TO CHANGE THIS BACK TO ACTUAL RATE FROM CONSTANTS
       double directionSlewRate;
       if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(tempDirectionSlewRate / m_currentTranslationMag);
+        directionSlewRate = Math.abs(6 / m_currentTranslationMag);
       } else {
         directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
       }
