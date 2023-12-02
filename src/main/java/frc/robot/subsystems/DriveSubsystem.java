@@ -53,8 +53,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable{
   private double m_currentTranslationMag = 0.0;
   
   private double lastDir = 0;
-
-  public double tempDirectionSlewRate = 1.2;
   
 
   private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
@@ -112,10 +110,6 @@ public class DriveSubsystem extends SubsystemBase implements Loggable{
     SmartDashboard.updateValues();
   }
 
-  @Config
-  public void changeDirectionSlewRate(double newRateVal){
-    tempDirectionSlewRate = newRateVal;
-  }
   /**
    * Returns the currently-estimated pose of the robot.
    *
@@ -170,7 +164,7 @@ public class DriveSubsystem extends SubsystemBase implements Loggable{
       //ISTG MAKE SURE TO CHANGE THIS BACK TO ACTUAL RATE FROM CONSTANTS
       double directionSlewRate;
       if (m_currentTranslationMag != 0.0) {
-        directionSlewRate = Math.abs(6 / m_currentTranslationMag);
+        directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
       } else {
         directionSlewRate = 500.0; //some high number that means the slew rate is effectively instantaneous
       }
